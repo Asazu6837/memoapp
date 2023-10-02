@@ -19,14 +19,14 @@ export default function MemoDetailScreen() {
                     本文用なので使い方を間違えると不自然に見えることもありますので要注意。
                 </Text>
             </ScrollView>
-            <CircleButton name="pencil" />
+            <CircleButton name="pencil" style={{ top: 160, bottom: "auto" }} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        frex: 1,
+        flex: 1,
         backgroundColor: "#fff",
     },
 
