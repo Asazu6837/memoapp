@@ -1,5 +1,5 @@
 import { createIconSetFromIcoMoon } from "@expo/vector-icons";
-import { useFonts } from "@use-expo/font";
+import { useFonts } from "expo-font";
 import { string, number, oneOf } from "prop-types";
 
 import icomoon from "../../assets/fonts/icomoon.ttf";

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 import Icon from "./icon";
 
@@ -10,9 +10,9 @@ export default function MemoList() {
                     <Text style={styles.memoListItemTitle}>買い物リスト</Text>
                     <Text style={styles.memolistItemData}>2020年12月24日</Text>
                 </View>
-                <View>
+                <TouchableOpacity>
                     <Icon name="delete" size={16} color="#B0B0B0" />
-                </View>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.memoListItem}>
@@ -20,9 +20,9 @@ export default function MemoList() {
                     <Text style={styles.memoListItemTitle}>買い物リスト</Text>
                     <Text style={styles.memolistItemData}>2020年12月24日</Text>
                 </View>
-                <View>
+                <TouchableOpacity>
                     <Icon name="delete" size={16} color="#B0B0B0" />
-                </View>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.memoListItem}>
@@ -30,9 +30,9 @@ export default function MemoList() {
                     <Text style={styles.memoListItemTitle}>買い物リスト</Text>
                     <Text style={styles.memolistItemData}>2020年12月24日</Text>
                 </View>
-                <View>
+                <TouchableOpacity>
                     <Icon name="delete" size={16} color="#B0B0B0" />
-                </View>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -47,14 +47,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 19,
         alignItems: "center",
         borderBottomWidth: 1,
-        borderColor: "rgba{0, 0, 0, 0.15}",
+        borderColor: "rgba(0,0,0,0.15)",
     },
-
     memoListItemTitle: {
         fontSize: 16,
         lineHeight: 32,
     },
-
     memolistItemData: {
         fontSize: 12,
         lineHeight: 16,
