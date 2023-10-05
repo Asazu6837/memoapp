@@ -15,6 +15,7 @@
         "indent": ["error", 4, { "SwitchCase": 1 }],
         "quotes": ["error", "double"],
         "react/jsx-indent": [2, 4],
-        "react/jsx-indent-props": ["error", 4]
+        "react/jsx-indent-props": ["error", 4],
+        "react/prop-types": ["error", { "ignore": ["navigation"] }]
     }
 }
