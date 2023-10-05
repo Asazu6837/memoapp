@@ -1,15 +1,36 @@
+import { useState } from "react";
 import { View, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 
 import Button from "../compornents/Button";
 
 export default function SignUpScreen(props) {
     const { navigation } = props;
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    // email=保持したい値,setEmail=値を更新する関数.("")=emailの初期値
+    // 上記だとemailがもう定義されている状態
     return (
         <View style={styles.container}>
             <View style={styles.inner}>
                 <Text style={styles.title}>Sign Up</Text>
-                <TextInput style={styles.input} value="Email Address" />
-                <TextInput style={styles.input} value="Password" />
+                <TextInput
+                    style={styles.input}
+                    value={email}
+                    onChangeText={(text) => { setEmail(text); }}
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    placeholder="Email Address"
+                    textContentType="emailAddress"
+                />
+                <TextInput
+                    style={styles.input}
+                    value={password}
+                    onChangeText={(text) => { setPassword(text); }}
+                    autoCapitalize="none"
+                    placeholder="Password"
+                    secureTextEntry
+                    textContentType="password"
+                />
                 <Button
                     label="Submit"
                     onPress={() => {
