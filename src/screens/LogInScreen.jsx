@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     View, StyleSheet, Text, TextInput, TouchableOpacity, Alert,
 } from "react-native";
 
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import Button from "../compornents/Button";
 
 export default function LogInScreen(props) {
@@ -13,6 +13,18 @@ export default function LogInScreen(props) {
     // email=保持したい値,setEmail=値を更新する関数.("")=emailの初期値
     // 上記だとemailがもう定義されている状態
     const auth = getAuth();
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: "MemoList" }],
+                });
+            }
+        });
+        return unsubscribe;
+    }, []);
 
     const handlePress = () => {
         // getAuth();
@@ -40,7 +52,9 @@ export default function LogInScreen(props) {
                 <TextInput
                     style={styles.input}
                     value={email}
-                    onChangeText={(text) => { setEmail(text); }}
+                    onChangeText={(text) => {
+                        setEmail(text);
+                    }}
                     autoCapitalize="none"
                     keyboardType="email-address"
                     placeholder="Email Address"
@@ -49,16 +63,15 @@ export default function LogInScreen(props) {
                 <TextInput
                     style={styles.input}
                     value={password}
-                    onChangeText={(text) => { setPassword(text); }}
+                    onChangeText={(text) => {
+                        setPassword(text);
+                    }}
                     autoCapitalize="none"
                     placeholder="Password"
                     secureTextEntry
                     textContentType="password"
                 />
-                <Button
-                    label="Submit"
-                    onPress={handlePress}
-                />
+                <Button label="Submit" onPress={handlePress} />
                 <View style={styles.footer}>
                     <Text style={styles.footerText}>not registered?</Text>
                     <TouchableOpacity
