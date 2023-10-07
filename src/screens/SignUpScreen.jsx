@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { View, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+    View, StyleSheet, Text, TextInput, TouchableOpacity, Alert,
+} from "react-native";
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    // GoogleAuthProvider,
+    // signInWithPopup,
+} from "firebase/auth";
 
 import Button from "../compornents/Button";
 
@@ -9,6 +17,27 @@ export default function SignUpScreen(props) {
     const [password, setPassword] = useState("");
     // email=保持したい値,setEmail=値を更新する関数.("")=emailの初期値
     // 上記だとemailがもう定義されている状態
+    const auth = getAuth();
+
+    const handlePress = () => {
+        // getAuth();
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // 登録成功時の処理
+                const { user } = userCredential;
+                console.log("ユーザーが登録されました:", user.uid);
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: "MemoList" }],
+                });
+            })
+            .catch((error) => {
+                // 登録エラー時の処理
+                console.log("ユーザーの登録に失敗しました:", error.code, error.message);
+                Alert.alert("ユーザーの登録に失敗しました:", error.code);
+            });
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.inner}>
@@ -16,7 +45,9 @@ export default function SignUpScreen(props) {
                 <TextInput
                     style={styles.input}
                     value={email}
-                    onChangeText={(text) => { setEmail(text); }}
+                    onChangeText={(text) => {
+                        setEmail(text);
+                    }}
                     autoCapitalize="none"
                     keyboardType="email-address"
                     placeholder="Email Address"
@@ -25,24 +56,15 @@ export default function SignUpScreen(props) {
                 <TextInput
                     style={styles.input}
                     value={password}
-                    onChangeText={(text) => { setPassword(text); }}
+                    onChangeText={(text) => {
+                        setPassword(text);
+                    }}
                     autoCapitalize="none"
                     placeholder="Password"
                     secureTextEntry
                     textContentType="password"
                 />
-                <Button
-                    label="Submit"
-                    onPress={() => {
-                        navigation.reset({
-                            index: 0,
-                            routes: [{ name: "MemoList" }],
-                        });
-                        // navigation.rest 履歴がどんな状態であれroutesの中身で上書きをする
-                        // indexの0番目を表示する
-                        // →0番目より前の画面は表示できないので結果的にBackボタンを削除できる
-                    }}
-                />
+                <Button label="Submit" onPress={handlePress} />
                 <View style={styles.footer}>
                     <Text style={styles.footerText}>Already registerd?</Text>
                     <TouchableOpacity

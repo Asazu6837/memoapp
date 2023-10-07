@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { View, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
+import {
+    View, StyleSheet, Text, TextInput, TouchableOpacity, Alert,
+} from "react-native";
 
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import Button from "../compornents/Button";
 
 export default function LogInScreen(props) {
@@ -9,6 +12,27 @@ export default function LogInScreen(props) {
     const [password, setPassword] = useState("");
     // email=保持したい値,setEmail=値を更新する関数.("")=emailの初期値
     // 上記だとemailがもう定義されている状態
+    const auth = getAuth();
+
+    const handlePress = () => {
+        // getAuth();
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // 登録成功時の処理
+                const { user } = userCredential;
+                console.log("ユーザーがログインしました:", user.uid);
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: "MemoList" }],
+                });
+            })
+            .catch((error) => {
+                // ログインエラー時の処理
+                console.log("ユーザーのログインに失敗しました:", error.code, error.message);
+                Alert.alert("ユーザーのログインに失敗しました:", error.code);
+            });
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.inner}>
@@ -33,15 +57,7 @@ export default function LogInScreen(props) {
                 />
                 <Button
                     label="Submit"
-                    onPress={() => {
-                        navigation.reset({
-                            index: 0,
-                            routes: [{ name: "MemoList" }],
-                        });
-                        // navigation.rest 履歴がどんな状態であれroutesの中身で上書きをする
-                        // indexの0番目を表示する
-                        // →0番目より前の画面は表示できないので結果的にBackボタンを削除できる
-                    }}
+                    onPress={handlePress}
                 />
                 <View style={styles.footer}>
                     <Text style={styles.footerText}>not registered?</Text>
