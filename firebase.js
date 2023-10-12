@@ -8,8 +8,8 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-initializeAuth(app, {
+const auth = initializeAuth(app, {
     persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
 
-export default db;
+export { db, auth };

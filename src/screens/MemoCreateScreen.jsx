@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-    View, StyleSheet, TextInput, KeyboardAvoidingView,
+    View, StyleSheet, TextInput,
 } from "react-native";
 
 import { collection, addDoc } from "firebase/firestore";
@@ -10,6 +10,8 @@ import { getAuth } from "firebase/auth";
 import { db } from "../../firebase";
 
 import CircleButton from "../compornents/CircleButton";
+
+import KeyboardAvoidingView from "../compornents/KeyboardAvoidingView";
 
 export default function MemoCreateScreen(props) {
     const { navigation } = props;
@@ -29,7 +31,7 @@ export default function MemoCreateScreen(props) {
             });
     };
     return (
-        <KeyboardAvoidingView style={styles.container} behavior="height">
+        <KeyboardAvoidingView style={styles.container}>
             <View style={styles.inputContainer}>
                 <TextInput
                     value={bodyText}
