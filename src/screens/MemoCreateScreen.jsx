@@ -4,10 +4,9 @@ import {
 } from "react-native";
 
 import { collection, addDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 
 // eslint-disable-next-line import/no-cycle, import/named
-import { db } from "../../firebase";
+import { auth, db } from "../../firebase";
 
 import CircleButton from "../compornents/CircleButton";
 
@@ -15,12 +14,12 @@ import KeyboardAvoidingView from "../compornents/KeyboardAvoidingView";
 
 export default function MemoCreateScreen(props) {
     const { navigation } = props;
-    const { currentUser } = getAuth();
+    const user = auth.currentUser;
     const [bodyText, SetBodyText] = useState(" ");
     const handlePress = () => {
-        addDoc(collection(db, `users/${currentUser.uid}/memos`), {
+        addDoc(collection(db, `users/${user.uid}/memos`), {
             bodyText,
-            updatedAd: new Date(),
+            updatedAt: new Date(),
         })
             .then((docRef) => {
                 console.log("Created!", docRef.id);
