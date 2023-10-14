@@ -37,7 +37,7 @@ export default function MemoListScreen(props) {
                 userMemos.push({
                     id: doc.id,
                     bodyText: data.bodyText,
-                    updatedAt: data.updatedAt.toDate(),
+                    updatedAt: data.updatedAt.toDate().toLocaleString("ja-JP"),
                     // toDate()Firestoreのデータ値をJavaのデータ型に変換
                 });
             });

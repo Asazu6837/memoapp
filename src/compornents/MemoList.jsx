@@ -1,6 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity, Alert, FlatList } from "react-native";
+import {
+    StyleSheet, Text, View, TouchableOpacity, Alert, FlatList,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { arrayOf, instanceOf, shape, string } from "prop-types";
+import {
+    arrayOf, instanceOf, shape, string,
+} from "prop-types";
 
 import Icon from "./icon";
 
@@ -12,7 +16,7 @@ export default function MemoList(props) {
         <TouchableOpacity
             style={styles.memoListItem}
             onPress={() => {
-                navigation.navigate("MemoDetail");
+                navigation.navigate("MemoDetail", { id: item.id });
             }}
         >
             <View>

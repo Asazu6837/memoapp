@@ -1,31 +1,77 @@
+import { useEffect, useState } from "react";
 import {
     View, Text, StyleSheet, ScrollView,
 } from "react-native";
+import { shape, string } from "prop-types";
+import { getAuth } from "firebase/auth";
+import {
+    collection, doc, onSnapshot, query,
+} from "firebase/firestore";
+// eslint-disable-next-line import/no-cycle, import/named
+import { db } from "../../firebase";
 
 import CircleButton from "../compornents/CircleButton";
 
 export default function MemoDetailScreen(props) {
-    const { navigation } = props;
+    const { navigation, route } = props;
+    // route = MemoList内のid受け取り用
+    const { id } = route.params;
+    const auth = getAuth();
+    console.log(id);
+    const [memo, setMemos] = useState([]);
+    useEffect(() => {
+        // ここの記載はMemoListScreenでの記載方法と異なる方法で行っているので注意
+        if (!auth.currentUser) {
+            return;
+        }
+        // const ref = collection(db, `users/${auth.currentUser.uid}/memos`, String(id));
+        // const q = query(ref);
+        const ref = doc(db, `users/${auth.currentUser.uid}/memos`, String(id));
+        const unsubscribe = onSnapshot(ref, (memoDoc) => {
+            // snapshot.forEach((memoDoc) => {
+            // });
+            const { bodyText, updatedAt } = memoDoc.data();
+            setMemos({
+                id: memoDoc.id,
+                bodyText,
+                updatedAt,
+            });
+        });
+        // eslint-disable-next-line no-undef, consistent-return
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
     return (
         <View style={styles.container}>
             <View style={styles.memoHeader}>
-                <Text style={styles.memoTitle}>買い物リスト</Text>
-                <Text style={styles.memoData}>2020年12月24日 10:00</Text>
+                <Text style={styles.memoTitle} numberOfLines={1}>
+                    {memo?.bodyText}
+                </Text>
+                <Text style={styles.memoData}>
+                    {memo?.updatedAt?.toDate().toLocaleString("ja-JP")}
+                </Text>
             </View>
             <ScrollView style={styles.memoBody}>
-                <Text style={styles.memoText}>
-                    買い物リスト 書体やレイアウトなどを確認するために用います。
-                    本文用なので使い方を間違えると不自然に見えることもありますので要注意。
-                </Text>
+                <Text style={styles.memoText}>{memo?.bodyText}</Text>
             </ScrollView>
             <CircleButton
                 name="pencil"
                 style={{ top: 60, bottom: "auto" }}
-                onPress={() => { navigation.navigate("MemoEdit"); }}// Stack.Screenの箇所で自動的にpropsに格納している
+                onPress={() => {
+                    navigation.navigate("MemoEdit");
+                }} // Stack.Screenの箇所で自動的にpropsに格納している
             />
         </View>
     );
 }
+
+MemoDetailScreen.propTypes = {
+    route: shape({
+        params: shape({ id: string }),
+    }).isRequired,
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -55,11 +101,11 @@ const styles = StyleSheet.create({
     },
 
     memoBody: {
-        paddingVertical: 32,
         paddingHorizontal: 27,
     },
 
     memoText: {
+        paddingVertical: 32,
         fontSize: 16,
         lineHeight: 24,
     },
