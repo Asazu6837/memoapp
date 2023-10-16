@@ -3,7 +3,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {
-    arrayOf, instanceOf, shape, string,
+    arrayOf, shape, string,
 } from "prop-types";
 
 import Icon from "./icon";
@@ -50,7 +50,8 @@ MemoList.propTypes = {
         shape({
             id: string,
             bodyText: string,
-            updatedAt: instanceOf(Date),
+            updatedAt: string,
+            // instanceOf(Date)
             // クラスから派生した値を格納するのに使用？
         }),
     ).isRequired,

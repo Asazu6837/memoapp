@@ -1,23 +1,62 @@
+import { useState } from "react";
 import {
-    View, StyleSheet, TextInput, KeyboardAvoidingView,
+    View, StyleSheet, TextInput, KeyboardAvoidingView, Alert,
 } from "react-native";
+import { shape, string } from "prop-types";
+import { getAuth } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+// eslint-disable-next-line import/no-cycle, import/named
+import { db } from "../../firebase";
 
 import CircleButton from "../compornents/CircleButton";
 
 export default function MemoEditScreen(props) {
-    const { navigation } = props;
+    const { navigation, route } = props;
+    const { id, bodyText } = route.params;
+    const [body, setBody] = useState(bodyText);
+    const auth = getAuth();
+    const handlePress = () => {
+        if (!auth.currentUser) {
+            return;
+        }
+        const ref = doc(db, `users/${auth.currentUser.uid}/memos`, String(id));
+        setDoc(ref, {
+            bodyText: body,
+            updatedAt: new Date(),
+        }, { merge: true })
+            .then(() => {
+                navigation.goBack();
+            })
+            .catch((error) => {
+                Alert.alert(error.code);
+            });
+    };
+
     return (
         <KeyboardAvoidingView style={styles.container} behavior="height">
             <View style={styles.inputContainer}>
-                <TextInput value="買い物リスト" multiline style={styles.input} />
+                <TextInput
+                    value={body}
+                    multiline
+                    style={styles.input}
+                    onChangeText={(text) => {
+                        setBody(text);
+                    }}
+                />
             </View>
             <CircleButton
                 name="check"
-                onPress={() => { navigation.goBack(); }}
+                onPress={handlePress}
             />
         </KeyboardAvoidingView>
     );
 }
+
+MemoEditScreen.propTypes = {
+    route: shape({
+        params: shape({ id: string, bodyText: string }),
+    }).isRequired,
+};
 
 const styles = StyleSheet.create({
     container: {

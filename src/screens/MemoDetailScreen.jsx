@@ -5,7 +5,7 @@ import {
 import { shape, string } from "prop-types";
 import { getAuth } from "firebase/auth";
 import {
-    collection, doc, onSnapshot, query,
+    doc, onSnapshot,
 } from "firebase/firestore";
 // eslint-disable-next-line import/no-cycle, import/named
 import { db } from "../../firebase";
@@ -60,7 +60,8 @@ export default function MemoDetailScreen(props) {
                 name="pencil"
                 style={{ top: 60, bottom: "auto" }}
                 onPress={() => {
-                    navigation.navigate("MemoEdit");
+                    navigation.navigate("MemoEdit", { id: memo.id, bodyText: memo.bodyText });
+                    //
                 }} // Stack.Screenの箇所で自動的にpropsに格納している
             />
         </View>
