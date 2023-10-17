@@ -5,14 +5,16 @@ import {
 
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import Button from "../compornents/Button";
+import Loading from "../compornents/Loading";
 
 export default function LogInScreen(props) {
     const { navigation } = props;
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     // email=保持したい値,setEmail=値を更新する関数.("")=emailの初期値
     // 上記だとemailがもう定義されている状態
+    const [password, setPassword] = useState("");
     const auth = getAuth();
+    const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -21,13 +23,15 @@ export default function LogInScreen(props) {
                     index: 0,
                     routes: [{ name: "MemoList" }],
                 });
+            } else {
+                setLoading(false);
             }
         });
         return unsubscribe;
     }, []);
 
     const handlePress = () => {
-        // getAuth();
+        setLoading(true);
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // 登録成功時の処理
@@ -42,11 +46,15 @@ export default function LogInScreen(props) {
                 // ログインエラー時の処理
                 console.log("ユーザーのログインに失敗しました:", error.code, error.message);
                 Alert.alert("ユーザーのログインに失敗しました:", error.code);
+            })
+            .then(() => {
+                setLoading(false);
             });
     };
 
     return (
         <View style={styles.container}>
+            <Loading isLoading={isLoading} />
             <View style={styles.inner}>
                 <Text style={styles.title}>Log In</Text>
                 <TextInput
