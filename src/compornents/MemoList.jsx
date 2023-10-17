@@ -2,15 +2,40 @@ import {
     StyleSheet, Text, View, TouchableOpacity, Alert, FlatList,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import {
-    arrayOf, shape, string,
-} from "prop-types";
+import { arrayOf, shape, string } from "prop-types";
+
+import { deleteDoc, doc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+// eslint-disable-next-line import/no-cycle, import/named
+import { db } from "../../firebase";
 
 import Icon from "./icon";
 
 export default function MemoList(props) {
     const { memos } = props;
     const navigation = useNavigation();
+    const auth = getAuth();
+
+    const deleteMemo = (id) => {
+        if (auth.currentUser) {
+            const ref = doc(db, `users/${auth.currentUser.uid}/memos`, String(id));
+            Alert.alert("メモを削除します", "よろしいですか", [
+                {
+                    text: "キャンセル",
+                    onPress: () => {},
+                },
+                {
+                    text: "削除する",
+                    style: "destructive",
+                    onPress: () => {
+                        deleteDoc(ref).catch(() => {
+                            Alert.alert("削除に失敗しました");
+                        });
+                    },
+                },
+            ]);
+        }
+    };
 
     const renderItem = ({ item }) => (
         <TouchableOpacity
@@ -20,13 +45,15 @@ export default function MemoList(props) {
             }}
         >
             <View>
-                <Text style={styles.memoListItemTitle} numberOfLines={1}>{item.bodyText}</Text>
+                <Text style={styles.memoListItemTitle} numberOfLines={1}>
+                    {item.bodyText}
+                </Text>
                 <Text style={styles.memolistItemData}>{String(item.updatedAt)}</Text>
             </View>
             <TouchableOpacity
                 style={styles.memoDelete}
                 onPress={() => {
-                    Alert.alert("Are you sure?");
+                    deleteMemo(item.id);
                 }}
             >
                 <Icon name="delete" size={16} color="#B0B0B0" />
@@ -36,11 +63,7 @@ export default function MemoList(props) {
 
     return (
         <View style={styles.container}>
-            <FlatList
-                data={memos}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-            />
+            <FlatList data={memos} renderItem={renderItem} keyExtractor={(item) => item.id} />
         </View>
     );
 }
