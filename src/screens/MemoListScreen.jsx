@@ -37,7 +37,6 @@ export default function MemoListScreen(props) {
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const userMemos = [];
             snapshot.forEach((doc) => {
-                console.log(doc.id, doc.data());
                 const data = doc.data();
                 userMemos.push({
                     id: doc.id,

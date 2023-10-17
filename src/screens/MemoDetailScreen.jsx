@@ -17,7 +17,6 @@ export default function MemoDetailScreen(props) {
     // route = MemoList内のid受け取り用
     const { id } = route.params;
     const auth = getAuth();
-    console.log(id);
     const [memo, setMemos] = useState([]);
     useEffect(() => {
         // ここの記載はMemoListScreenでの記載方法と異なる方法で行っているので注意

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-    View, StyleSheet, TextInput,
+    View, StyleSheet, TextInput, Alert,
 } from "react-native";
 
 import { collection, addDoc } from "firebase/firestore";
@@ -10,6 +10,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { auth, db } from "../../firebase";
 
 import CircleButton from "../compornents/CircleButton";
+import translateErrors from "../utils";
 
 export default function MemoCreateScreen(props) {
     const { navigation } = props;
@@ -20,12 +21,12 @@ export default function MemoCreateScreen(props) {
             bodyText,
             updatedAt: new Date(),
         })
-            .then((docRef) => {
-                console.log("Created!", docRef.id);
+            .then(() => {
                 navigation.goBack();
             })
             .catch((error) => {
-                console.log("Error!", error);
+                const errorMsg = translateErrors(error.code);
+                Alert.alert(errorMsg.title, errorMsg.description);
             });
     };
     return (

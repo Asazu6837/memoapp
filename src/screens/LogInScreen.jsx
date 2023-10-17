@@ -34,10 +34,8 @@ export default function LogInScreen(props) {
     const handlePress = () => {
         setLoading(true);
         signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
+            .then(() => {
                 // 登録成功時の処理
-                const { user } = userCredential;
-                console.log("ユーザーがログインしました:", user.uid);
                 navigation.reset({
                     index: 0,
                     routes: [{ name: "MemoList" }],
