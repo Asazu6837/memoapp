@@ -6,7 +6,7 @@ import {
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import Button from "../compornents/Button";
 import Loading from "../compornents/Loading";
-import { translateErrors } from "../utils";
+import translateErrors from "../utils";
 
 export default function LogInScreen(props) {
     const { navigation } = props;

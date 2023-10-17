@@ -4,13 +4,12 @@ import {
 } from "react-native";
 
 import { collection, addDoc } from "firebase/firestore";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 // eslint-disable-next-line import/no-cycle, import/named
 import { auth, db } from "../../firebase";
 
 import CircleButton from "../compornents/CircleButton";
-
-import KeyboardAvoidingView from "../compornents/KeyboardAvoidingView";
 
 export default function MemoCreateScreen(props) {
     const { navigation } = props;
@@ -30,7 +29,7 @@ export default function MemoCreateScreen(props) {
             });
     };
     return (
-        <KeyboardAvoidingView style={styles.container}>
+        <KeyboardAwareScrollView contentContainerStyle={styles.container}>
             <View style={styles.inputContainer}>
                 <TextInput
                     value={bodyText}
@@ -41,7 +40,7 @@ export default function MemoCreateScreen(props) {
                 />
             </View>
             <CircleButton name="check" onPress={handlePress} />
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
     );
 }
 

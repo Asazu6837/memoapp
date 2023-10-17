@@ -1,7 +1,8 @@
 import { useState } from "react";
 import {
-    View, StyleSheet, TextInput, KeyboardAvoidingView, Alert,
+    View, StyleSheet, TextInput, Alert,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { shape, string } from "prop-types";
 import { getAuth } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
@@ -9,6 +10,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 
 import CircleButton from "../compornents/CircleButton";
+import translateErrors from "../utils";
 
 export default function MemoEditScreen(props) {
     const { navigation, route } = props;
@@ -28,12 +30,14 @@ export default function MemoEditScreen(props) {
                 navigation.goBack();
             })
             .catch((error) => {
-                Alert.alert(error.code);
+                const errorMsg = translateErrors(error.code);
+                Alert.alert(errorMsg.title, errorMsg.description);
             });
     };
 
     return (
-        <KeyboardAvoidingView style={styles.container} behavior="height">
+        // <KeyboardAvoidingView style={styles.container} behavior="height">
+        <KeyboardAwareScrollView contentContainerStyle={styles.container}>
             <View style={styles.inputContainer}>
                 <TextInput
                     value={body}
@@ -48,7 +52,8 @@ export default function MemoEditScreen(props) {
                 name="check"
                 onPress={handlePress}
             />
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
+        // </KeyboardAvoidingView>
     );
 }
 
